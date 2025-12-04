@@ -13,5 +13,6 @@ An AI-powered system for detecting and classifying sensitive information (PII/PH
 
 ### 1. Clone & Setup
 ```bash
-git clone https://github.com/yourusername/sensitive-data-classifier.git
-cd sensitive-data-classifier
+git clone https://github.com/mrinaliii/SecureSense.git
+cd SecureSense
+```

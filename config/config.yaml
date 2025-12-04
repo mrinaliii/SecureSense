@@ -1,0 +1,31 @@
+app:
+  name: "Sensitive Data Classifier"
+  version: "1.0.0"
+  debug: false
+
+model:
+  transformer_model: "distilbert-base-uncased"
+  batch_size: 16
+  threshold: 0.85
+  use_gpu: true
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  rate_limit: "100/minute"
+
+security:
+  encryption_key: "${ENCRYPTION_KEY}"
+  jwt_secret: "${JWT_SECRET}"
+  token_expiry_minutes: 30
+
+logging:
+  level: "INFO"
+  audit_file: "logs/audit.log"
+  access_file: "logs/access.log"
+
+monitoring:
+  enable_prometheus: true
+  elasticsearch_host: "localhost:9200"
+  alert_webhook: "${ALERT_WEBHOOK}"

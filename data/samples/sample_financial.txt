@@ -1,0 +1,8 @@
+Customer Information:
+Name: John Doe
+Email: john.doe@example.com
+PAN: ABCDE1234F
+Bank Account: 12345678901234
+Phone: 9876543210
+Credit Card: 4111-1111-1111-1111
+Transaction Amount: ₹15,000.00

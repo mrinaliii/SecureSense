@@ -1,0 +1,28 @@
+# config/policies.yaml
+data_retention:
+  audit_logs_days: 90
+  classification_results_days: 30
+  raw_text_storage: false
+
+access_control:
+  admin_users: ["admin", "security_team"]
+  read_only_users: ["auditor", "compliance"]
+  default_role: "user"
+
+risk_thresholds:
+  critical: 0.7
+  high: 0.4
+  medium: 0.2
+  low: 0.0
+
+compliance:
+  gdpr_enabled: true
+  dpdp_act_enabled: true
+  data_minimization: true
+  right_to_erasure: true
+
+encryption:
+  algorithm: "AES-256-GCM"
+  key_rotation_days: 90
+  enable_at_rest: true
+  enable_in_transit: true

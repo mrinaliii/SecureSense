@@ -1,0 +1,8 @@
+Patient Record:
+Patient ID: P-78901
+Name: Mrinali Charhate
+Email: mrinali.charhate@hospital.com
+Phone: 8765432109
+Aadhaar: 1234 5678 9012
+Diagnosis Code: ICD-10 J45.909
+Treatment: Asthma management

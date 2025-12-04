@@ -1,0 +1,8 @@
+{
+  "model_name": "distilbert-base-uncased",
+  "max_length": 512,
+  "embedding_size": 768,
+  "use_cuda": true,
+  "batch_size": 16,
+  "cache_dir": "./models/cache"
+}

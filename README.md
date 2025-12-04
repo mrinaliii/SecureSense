@@ -1,4 +1,4 @@
-# 🔐 Sensitive Data Classifier
+#  Sensitive Data Classifier
 
 An AI-powered system for detecting and classifying sensitive information (PII/PHI) with anomaly detection capabilities.
 

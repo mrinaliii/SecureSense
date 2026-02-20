@@ -91,7 +91,8 @@ def main():
 
     os.makedirs("../models/distilbert-pii", exist_ok=True)
     trainer.save_model("../models/distilbert-pii")
-
+    from preprocess import tokenizer
+    tokenizer.save_pretrained("../models/distilbert-pii")
     print("\nTraining Complete.")
 
     os.makedirs("results", exist_ok=True)

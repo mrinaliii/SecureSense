@@ -1,23 +1,29 @@
 import re
-
-PATTERNS = {
-    "EMAIL": r"[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+",
-    "PHONE": r"\+?\d[\d -]{8,12}\d",
-    "CREDIT_CARD": r"\b(?:\d[ -]*?){13,16}\b",
-}
+from typing import List, Dict
 
 
-def regex_detect(text):
+class RegexDetector:
 
-    results = []
+    def __init__(self):
+        self.patterns = {
+            "EMAIL": re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"),
+            "PHONE": re.compile(r"\b\d{10}\b"),
+            "CREDIT_CARD": re.compile(r"\b(?:\d[ -]*?){13,16}\b"),
+            "IP_ADDRESS": re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b"),
+            "AADHAAR": re.compile(r"\b\d{4}\s?\d{4}\s?\d{4}\b")
+        }
 
-    for label, pattern in PATTERNS.items():
+    def detect(self, text: str) -> List[Dict]:
 
-        for match in re.finditer(pattern, text):
+        detections = []
 
-            results.append({
-                "entity": label,
-                "value": match.group()
-            })
+        for label, pattern in self.patterns.items():
+            for match in pattern.finditer(text):
+                detections.append({
+                    "entity": match.group(),
+                    "label": label,
+                    "start": match.start(),
+                    "end": match.end()
+                })
 
-    return results
+        return detections

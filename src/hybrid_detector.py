@@ -1,20 +1,36 @@
-from regex_detector import regex_detect
-from transformers import pipeline
+from typing import List, Dict
+from regex_detector import RegexDetector
+from predict import TransformerPredictor
 
 
-ner_pipeline = pipeline(
-    "token-classification",
-    model="../models/distilbert-pii",
-    aggregation_strategy="simple"
-)
+class HybridDetector:
 
+    def __init__(self):
+        self.regex_detector = RegexDetector()
+        self.transformer_detector = TransformerPredictor()
 
-def hybrid_detect(text):
+    def merge_results(self, regex_results: List[Dict], transformer_results: List[Dict]) -> List[Dict]:
 
-    regex_results = regex_detect(text)
-    bert_results = ner_pipeline(text)
+        combined = regex_results.copy()
 
-    return {
-        "regex_detection": regex_results,
-        "bert_detection": bert_results
-    }
+        for t in transformer_results:
+            overlap = False
+
+            for r in regex_results:
+                if not (t["end"] <= r["start"] or t["start"] >= r["end"]):
+                    overlap = True
+                    break
+
+            if not overlap:
+                combined.append(t)
+
+        return combined
+
+    def detect(self, text: str) -> List[Dict]:
+
+        regex_results = self.regex_detector.detect(text)
+        transformer_results = self.transformer_detector.predict(text)
+
+        final_results = self.merge_results(regex_results, transformer_results)
+
+        return sorted(final_results, key=lambda x: x["start"])

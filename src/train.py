@@ -36,9 +36,14 @@ def main():
     label_list = dataset["train"].features["ner_tags"].feature.names
     metrics.label_list = label_list
 
+    id2label = {i: label for i, label in enumerate(label_list)}
+    label2id = {label: i for i, label in enumerate(label_list)}
+
     model = AutoModelForTokenClassification.from_pretrained(
         "distilbert-base-uncased",
-        num_labels=len(label_list)
+        num_labels=len(label_list),
+        id2label=id2label,
+        label2id=label2id
     )
 
     data_collator = DataCollatorForTokenClassification(tokenizer)
@@ -91,7 +96,6 @@ def main():
 
     os.makedirs("../models/distilbert-pii", exist_ok=True)
     trainer.save_model("../models/distilbert-pii")
-    from preprocess import tokenizer
     tokenizer.save_pretrained("../models/distilbert-pii")
     print("\nTraining Complete.")
 

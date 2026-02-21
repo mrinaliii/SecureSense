@@ -1,7 +1,6 @@
 from typing import List, Dict
-from regex_detector import RegexDetector
-from predict import TransformerPredictor
-
+from src.regex_detector import RegexDetector
+from src.predict import TransformerPredictor
 
 class HybridDetector:
 

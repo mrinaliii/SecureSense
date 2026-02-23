@@ -98,7 +98,7 @@ def main():
     trainer.save_model("../models/distilbert-pii")
     tokenizer.save_pretrained("../models/distilbert-pii")
     print("\nTraining Complete.")
-#
+
     os.makedirs("results", exist_ok=True)
 
     df = pd.DataFrame(trainer.state.log_history)

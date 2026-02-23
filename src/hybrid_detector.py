@@ -1,35 +1,64 @@
-from typing import List, Dict
+import re
 from src.regex_detector import RegexDetector
 from src.predict import TransformerPredictor
-#
+
+
 class HybridDetector:
 
     def __init__(self):
+
         self.regex_detector = RegexDetector()
         self.transformer_detector = TransformerPredictor()
 
-    def merge_results(self, regex_results: List[Dict], transformer_results: List[Dict]) -> List[Dict]:
-
-        combined = regex_results.copy()
-
-        for t in transformer_results:
-            overlap = False
-
-            for r in regex_results:
-                if not (t["end"] <= r["start"] or t["start"] >= r["end"]):
-                    overlap = True
-                    break
-
-            if not overlap:
-                combined.append(t)
-
-        return combined
-
-    def detect(self, text: str) -> List[Dict]:
+    def detect(self, text):
 
         regex_results = self.regex_detector.detect(text)
         transformer_results = self.transformer_detector.predict(text)
 
-        final_results = self.merge_results(regex_results, transformer_results)
+        heuristic_results = self.detect_capitalized_names(text, transformer_results)
 
-        return sorted(final_results, key=lambda x: x["start"])
+        combined = regex_results + transformer_results + heuristic_results
+
+        return self.remove_overlaps(combined)
+
+    def detect_capitalized_names(self, text, transformer_results):
+
+        detections = []
+
+        existing_spans = {(r["start"], r["end"]) for r in transformer_results}
+
+        words = re.finditer(r"\b[A-Z][a-z]+\b", text)
+
+        for match in words:
+
+            word = match.group()
+            start, end = match.start(), match.end()
+
+            # Skip if at start of sentence (after period)
+            if start > 1 and text[start - 2] == ".":
+                continue
+
+            if (start, end) not in existing_spans:
+                detections.append({
+                    "entity": word,
+                    "label": "PER",
+                    "start": start,
+                    "end": end
+                })
+
+        return detections
+
+    def remove_overlaps(self, detections):
+
+        detections = sorted(detections, key=lambda x: (x["start"], -x["end"]))
+
+        final = []
+
+        for det in detections:
+            if not any(
+                det["start"] < f["end"] and det["end"] > f["start"]
+                for f in final
+            ):
+                final.append(det)
+
+        return final

@@ -50,7 +50,7 @@ def main():
 
     training_args = TrainingArguments(
 
-        output_dir="./results",
+        output_dir="../results"
 
         per_device_train_batch_size=4,
         per_device_eval_batch_size=4,
@@ -99,10 +99,10 @@ def main():
     tokenizer.save_pretrained("../models/distilbert-pii")
     print("\nTraining Complete.")
 
-    os.makedirs("results", exist_ok=True)
+    os.makedirs("../results", exist_ok=True)
 
     df = pd.DataFrame(trainer.state.log_history)
-    df.to_csv("./results/training_metrics.csv", index=False)
+    df.to_csv("../results/training_metrics.csv", index=False)
 
     print("Metrics saved.")
 
@@ -111,7 +111,7 @@ def main():
     if not eval_df.empty:
 
         best = eval_df.sort_values("eval_f1", ascending=False).iloc[0]
-        best.to_csv("results/best_metrics.csv")
+        best.to_csv("../results/best_metrics.csv", index=True)
 
         print("\nBEST MODEL:")
         print(best[["epoch","eval_loss","eval_precision","eval_recall","eval_f1"]])
